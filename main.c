@@ -1,8 +1,6 @@
-// ReSharper disable CppJoinDeclarationAndAssignment
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define null NULL
 typedef struct node node;
 
 struct node{
@@ -45,7 +43,7 @@ void free_node(node* input) {
 
 void print_list(node* base) {
     node* curr = base;
-    while (curr != null) {
+    while (curr != NULL) {
         printf(curr->val);
         curr = curr->next;
     }
@@ -91,7 +89,7 @@ int delete_node_at(node* base, const int index) {
     }
     if(before == NULL)
         return 1;
-    if(before->next == null)
+    if(before->next == NULL)
         return 1;
 
     target = before->next;
@@ -110,7 +108,7 @@ int delete_node_at(node* base, const int index) {
 int determine_length(node* base) {
     int increment = 0;
     node* curr = base;
-    while (curr->next != null) {
+    while (curr->next != NULL) {
         curr = curr->next;
         increment++;
     }
@@ -127,7 +125,7 @@ int index_of(node* base, node* target) {
         return -1;
 
 
-    while (curr->next != null && curr != target) {
+    while (curr->next != NULL && curr != target) {
         curr = curr->next;
         i++;
     }
@@ -139,7 +137,7 @@ int index_of(node* base, node* target) {
 
 node* end(node* base) {
     node* end = base;
-    while (end->next != null) {
+    while (end->next != NULL) {
         end = end->next;
     }
     return end;
@@ -152,17 +150,18 @@ void make_swap(node* base, node* target) {
 }
 
 int insert(node* base, node* target, int index) {
+    node* curr = base;
+    int i = 0;
+
     if(index == 0) {
         make_swap(base,target);
         return 0;
     }
 
-    node* curr = base;
-    int i = 0;
     if(target == NULL) // invalid input
         return -1;
 
-    while (curr->next != null && i < index-1) {
+    while (curr->next != NULL && i < index-1) {
         curr = curr->next;
         i++;
     }
@@ -188,6 +187,8 @@ int main()
     two->next = five;
     three->next = four;
 
+    print_list(base->next);
+    printf("-----\n");
 
     insert(base,three,3);
 
