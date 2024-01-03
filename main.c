@@ -22,6 +22,35 @@ node* create(char* val) {
     return ll;
 }
 
+/**
+ * \brief Converts a stack string into a heap one
+ * \param stack_str input char to convert to move to the heap
+ * \return pointer to heap address;
+ */
+char* alloc_str(const char* stack_str) {
+    const int len = strlen(stack_str);
+    char *heap_str = malloc(len + 1);
+    strcpy(heap_str, stack_str);
+    return heap_str;
+}
+
+void free_node(node* input) {
+    if (input != NULL) {
+        free(input->val);
+        input->val = NULL;
+        free(input);
+        input = NULL;
+    }
+}
+
+void print_list(node* base) {
+    node* curr = base;
+    while (curr != null) {
+        printf(curr->val);
+        curr = curr->next;
+    }
+}
+
 char* get_last(const node* base) {
     const node* curr = base;
 
@@ -107,6 +136,7 @@ int index_of(node* base, node* target) {
 
     return -1;
 }
+
 node* end(node* base) {
     node* end = base;
     while (end->next != null) {
@@ -115,7 +145,18 @@ node* end(node* base) {
     return end;
 }
 
+void make_swap(node* base, node* target) {
+    node* tmp = base->next;
+    base->next = target;
+    end(target)->next = tmp;
+}
+
 int insert(node* base, node* target, int index) {
+    if(index == 0) {
+        make_swap(base,target);
+        return 0;
+    }
+
     node* curr = base;
     int i = 0;
     if(target == NULL) // invalid input
@@ -127,54 +168,35 @@ int insert(node* base, node* target, int index) {
     }
     if(i != (index-1)) // invalid index
         return -1;
-    node* after = curr->next;
-    curr->next = target;
-    end(target)->next = after;
+    // Because the target could have attached nodes, we want to make sure we attach the node after curr
+    // to the very end of the inserted node
+    make_swap(curr,target);
     return 0;
-
-}
-
-/**
- * \brief Converts a stack string into a heap one
- * \param stack_str input char to convert to move to the heap
- * \return pointer to heap address;
- */
-char* alloc_str(const char* stack_str) {
-    const int len = strlen(stack_str);
-    char *heap_str = malloc(len + 1);
-    strcpy(heap_str, stack_str);
-    return heap_str;
-}
-
-void free_node(node* input) {
-    if (input != NULL) {
-        free(input->val);
-        input->val = NULL;
-        free(input);
-        input = NULL;
-    }
 }
 
 int main()
 {
-    node* base = create(alloc_str("base\n\0"));
-    node* one = create(alloc_str("One\n\0"));
-    node* two = create(alloc_str("Two\n\0"));
+    node* base = create(alloc_str("base\n\0")); // index 0
+    node* one = create(alloc_str("One\n\0")); // index 1
+    node* two = create(alloc_str("Two\n\0")); // etc.
     node* three = create(alloc_str("Three\n\0"));
     node* four = create(alloc_str("Four\n\0"));
+    node* five = create(alloc_str("Five\n\0"));
+
     base->next = one;
     one->next = two;
+    two->next = five;
     three->next = four;
 
+
     insert(base,three,3);
-    node* node = get_node_at(base, 4);
-    if(node == null)
-        return 1;
-    printf(node->val);
+
+    print_list(base->next);
 
     free_node(base);
     free_node(one);
     free_node(two);
     free_node(four);
+
     return 0;
 }
